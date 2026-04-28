@@ -20,6 +20,7 @@ app.use(express.static(path.join(__dirname, 'static')));
 // is fine — the bug is in the timing, not the storage.
 let currentDraft = '';
 let publishedDraft = '';
+let saveQueue = Promise.resolve();
 
 // SAVE_COMMIT_DELAY_MS controls how long a /draft request takes to commit.
 // In production this would represent database write latency, network latency,
@@ -28,6 +29,36 @@ let publishedDraft = '';
 // Set to 200ms by default to make the race condition reliably reproducible.
 // Tests may override this via environment variable.
 const SAVE_COMMIT_DELAY_MS = parseInt(process.env.SAVE_COMMIT_DELAY_MS || '200', 10);
+const TRACE_SAVE_PUBLISH = process.env.TRACE_SAVE_PUBLISH === '1';
+let traceSequence = 0;
+
+function trace(event, details = {}) {
+  if (!TRACE_SAVE_PUBLISH) {
+    return;
+  }
+
+  traceSequence += 1;
+  console.error(JSON.stringify({
+    seq: traceSequence,
+    at: new Date().toISOString(),
+    event,
+    currentDraft,
+    publishedDraft,
+    ...details,
+  }));
+}
+
+function commitDraft(content) {
+  return new Promise((resolve) => {
+    // Simulate write latency.
+    setTimeout(() => {
+      trace('draft.commit.start', { content });
+      currentDraft = content;
+      trace('draft.commit.finish', { content });
+      resolve(content);
+    }, SAVE_COMMIT_DELAY_MS);
+  });
+}
 
 // ---------------------------------------------------------------------------
 // Routes
@@ -37,27 +68,41 @@ const SAVE_COMMIT_DELAY_MS = parseInt(process.env.SAVE_COMMIT_DELAY_MS || '200',
 //
 // Note the artificial delay: the draft is not committed to currentDraft
 // until SAVE_COMMIT_DELAY_MS milliseconds after the request arrives.
-app.post('/draft', (req, res) => {
+app.post('/draft', async (req, res, next) => {
   const { content } = req.body;
   if (typeof content !== 'string') {
     return res.status(400).json({ error: 'content must be a string' });
   }
 
-  // Simulate write latency.
-  setTimeout(() => {
-    currentDraft = content;
+  trace('draft.accepted', { content, delayMs: SAVE_COMMIT_DELAY_MS });
+
+  const saveOperation = saveQueue.then(() => commitDraft(content));
+  saveQueue = saveOperation.catch(() => {});
+
+  try {
+    await saveOperation;
     res.json({ ok: true, saved: content });
-  }, SAVE_COMMIT_DELAY_MS);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // POST /publish — mark the most recent saved draft as live.
 //
-// THE BUG: this reads currentDraft *immediately*. If a /draft request is
-// in flight (its timeout hasn't fired), publishedDraft will be set to the
-// older saved value, not the in-flight one.
-app.post('/publish', (req, res) => {
-  publishedDraft = currentDraft;
-  res.json({ ok: true, published: publishedDraft });
+// Capture the saves that were already in flight when publish arrived, then
+// wait for them before reading currentDraft.
+app.post('/publish', async (req, res, next) => {
+  const savesBeforePublish = saveQueue;
+  trace('publish.start');
+
+  try {
+    await savesBeforePublish;
+    publishedDraft = currentDraft;
+    trace('publish.finish', { published: publishedDraft });
+    res.json({ ok: true, published: publishedDraft });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // GET /published — return the currently published draft.
@@ -72,8 +117,10 @@ app.get('/current', (req, res) => {
 
 // Reset endpoint for tests.
 app.post('/reset', (req, res) => {
+  trace('reset.start');
   currentDraft = '';
   publishedDraft = '';
+  trace('reset.finish');
   res.json({ ok: true });
 });
 

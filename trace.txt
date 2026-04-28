@@ -1,0 +1,42 @@
+
+> week4-debug-assignment@1.0.0 harness:race
+> node harness/race-harness.js
+
+{"harness":true,"at":"2026-04-28T05:46:56.120Z","event":"harness.start","iterations":3,"publishGapMs":0,"failOnRace":false,"saveCommitDelayMs":"300"}
+{"harness":true,"at":"2026-04-28T05:46:56.122Z","event":"iteration.start","iteration":1,"initialDraft":"draft A 1","latestDraft":"draft B 1"}
+{"seq":1,"at":"2026-04-28T05:46:56.139Z","event":"reset.start","currentDraft":"","publishedDraft":""}
+{"seq":2,"at":"2026-04-28T05:46:56.139Z","event":"reset.finish","currentDraft":"","publishedDraft":""}
+{"seq":3,"at":"2026-04-28T05:46:56.160Z","event":"draft.accepted","currentDraft":"","publishedDraft":"","content":"draft A 1","delayMs":300}
+{"seq":4,"at":"2026-04-28T05:46:56.463Z","event":"draft.commit.start","currentDraft":"","publishedDraft":"","content":"draft A 1"}
+{"seq":5,"at":"2026-04-28T05:46:56.463Z","event":"draft.commit.finish","currentDraft":"draft A 1","publishedDraft":"","content":"draft A 1"}
+{"seq":6,"at":"2026-04-28T05:46:56.488Z","event":"draft.accepted","currentDraft":"draft A 1","publishedDraft":"","content":"draft B 1","delayMs":300}
+{"seq":7,"at":"2026-04-28T05:46:56.493Z","event":"publish.start","currentDraft":"draft A 1","publishedDraft":""}
+{"seq":8,"at":"2026-04-28T05:46:56.493Z","event":"publish.finish","currentDraft":"draft A 1","publishedDraft":"draft A 1","published":"draft A 1"}
+{"seq":9,"at":"2026-04-28T05:46:56.791Z","event":"draft.commit.start","currentDraft":"draft A 1","publishedDraft":"draft A 1","content":"draft B 1"}
+{"seq":10,"at":"2026-04-28T05:46:56.791Z","event":"draft.commit.finish","currentDraft":"draft B 1","publishedDraft":"draft A 1","content":"draft B 1"}
+{"harness":true,"at":"2026-04-28T05:46:56.803Z","event":"iteration.finish","iteration":1,"saveResponse":"draft B 1","publishResponse":"draft A 1","currentAfterBoth":"draft B 1","publishedAfterBoth":"draft A 1","stalePublish":true}
+{"harness":true,"at":"2026-04-28T05:46:56.804Z","event":"iteration.start","iteration":2,"initialDraft":"draft A 2","latestDraft":"draft B 2"}
+{"seq":11,"at":"2026-04-28T05:46:56.806Z","event":"reset.start","currentDraft":"draft B 1","publishedDraft":"draft A 1"}
+{"seq":12,"at":"2026-04-28T05:46:56.806Z","event":"reset.finish","currentDraft":"","publishedDraft":""}
+{"seq":13,"at":"2026-04-28T05:46:56.810Z","event":"draft.accepted","currentDraft":"","publishedDraft":"","content":"draft A 2","delayMs":300}
+{"seq":14,"at":"2026-04-28T05:46:57.112Z","event":"draft.commit.start","currentDraft":"","publishedDraft":"","content":"draft A 2"}
+{"seq":15,"at":"2026-04-28T05:46:57.112Z","event":"draft.commit.finish","currentDraft":"draft A 2","publishedDraft":"","content":"draft A 2"}
+{"seq":16,"at":"2026-04-28T05:46:57.118Z","event":"draft.accepted","currentDraft":"draft A 2","publishedDraft":"","content":"draft B 2","delayMs":300}
+{"seq":17,"at":"2026-04-28T05:46:57.119Z","event":"publish.start","currentDraft":"draft A 2","publishedDraft":""}
+{"seq":18,"at":"2026-04-28T05:46:57.119Z","event":"publish.finish","currentDraft":"draft A 2","publishedDraft":"draft A 2","published":"draft A 2"}
+{"seq":19,"at":"2026-04-28T05:46:57.418Z","event":"draft.commit.start","currentDraft":"draft A 2","publishedDraft":"draft A 2","content":"draft B 2"}
+{"seq":20,"at":"2026-04-28T05:46:57.419Z","event":"draft.commit.finish","currentDraft":"draft B 2","publishedDraft":"draft A 2","content":"draft B 2"}
+{"harness":true,"at":"2026-04-28T05:46:57.427Z","event":"iteration.finish","iteration":2,"saveResponse":"draft B 2","publishResponse":"draft A 2","currentAfterBoth":"draft B 2","publishedAfterBoth":"draft A 2","stalePublish":true}
+{"harness":true,"at":"2026-04-28T05:46:57.427Z","event":"iteration.start","iteration":3,"initialDraft":"draft A 3","latestDraft":"draft B 3"}
+{"seq":21,"at":"2026-04-28T05:46:57.429Z","event":"reset.start","currentDraft":"draft B 2","publishedDraft":"draft A 2"}
+{"seq":22,"at":"2026-04-28T05:46:57.429Z","event":"reset.finish","currentDraft":"","publishedDraft":""}
+{"seq":23,"at":"2026-04-28T05:46:57.433Z","event":"draft.accepted","currentDraft":"","publishedDraft":"","content":"draft A 3","delayMs":300}
+{"seq":24,"at":"2026-04-28T05:46:57.733Z","event":"draft.commit.start","currentDraft":"","publishedDraft":"","content":"draft A 3"}
+{"seq":25,"at":"2026-04-28T05:46:57.734Z","event":"draft.commit.finish","currentDraft":"draft A 3","publishedDraft":"","content":"draft A 3"}
+{"seq":26,"at":"2026-04-28T05:46:57.738Z","event":"draft.accepted","currentDraft":"draft A 3","publishedDraft":"","content":"draft B 3","delayMs":300}
+{"seq":27,"at":"2026-04-28T05:46:57.738Z","event":"publish.start","currentDraft":"draft A 3","publishedDraft":""}
+{"seq":28,"at":"2026-04-28T05:46:57.738Z","event":"publish.finish","currentDraft":"draft A 3","publishedDraft":"draft A 3","published":"draft A 3"}
+{"seq":29,"at":"2026-04-28T05:46:58.038Z","event":"draft.commit.start","currentDraft":"draft A 3","publishedDraft":"draft A 3","content":"draft B 3"}
+{"seq":30,"at":"2026-04-28T05:46:58.039Z","event":"draft.commit.finish","currentDraft":"draft B 3","publishedDraft":"draft A 3","content":"draft B 3"}
+{"harness":true,"at":"2026-04-28T05:46:58.048Z","event":"iteration.finish","iteration":3,"saveResponse":"draft B 3","publishResponse":"draft A 3","currentAfterBoth":"draft B 3","publishedAfterBoth":"draft A 3","stalePublish":true}
+{"harness":true,"at":"2026-04-28T05:46:58.048Z","event":"harness.finish","iterations":3,"stalePublishes":3,"raceConfirmed":true}
